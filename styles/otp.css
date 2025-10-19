@@ -1,0 +1,50 @@
+/* ========================================
+   KA Retail E-Ordering - OTP Screen Styles
+   ======================================== */
+
+#otp-screen {
+    background-color: #0B0B0B;
+}
+
+#otp-screen .glass-card {
+    animation: slideUp 0.6s ease-out;
+}
+
+.otp-input {
+    text-align: center;
+    font-size: 24px;
+    letter-spacing: 8px;
+    font-weight: 600;
+}
+
+.resend-button {
+    width: 100%;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: var(--font-body);
+    background: transparent;
+    color: var(--color-gold);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: -8px;
+}
+
+.resend-button:hover {
+    background: rgba(255, 215, 0, 0.1);
+    border-color: var(--color-gold);
+}
+
+.resend-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+@media (max-width: 768px) {
+    .otp-input {
+        font-size: 20px;
+        letter-spacing: 6px;
+    }
+}

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock - KA Retail</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/common.css">
+    <link rel="stylesheet" href="styles/section.css">
+</head>
+<body>
+     <script>
+        (function() {
+            try {
+                const stored = localStorage.getItem('kaRetailUser');
+                if (!stored) {
+                    window.location.replace('index.html');
+                    return;
+                }
+                
+                const userData = JSON.parse(stored);
+                const expiryDate = new Date(userData.sessionExpiry);
+                const now = new Date();
+                
+                if (now > expiryDate) {
+                    localStorage.removeItem('kaRetailUser');
+                    window.location.replace('index.html');
+                    return;
+                }
+            } catch(e) {
+                window.location.replace('index.html');
+                return;
+            }
+        })();
+    </script>
+    <div class="app-container">
+        <section id="stock-screen" class="screen active">
+            <header class="luxury-header">
+                <div class="header-content">
+                    <div class="header-left">
+                        <svg viewBox="0 0 100 100" class="header-logo">
+                            <text x="10" y="60" font-size="48" font-family="Cinzel, serif" fill="#FFD700">KA</text>
+                        </svg>
+                        <div class="header-text">
+                            <h1>Stock</h1>
+                            <p>Kambeshwar Agencies</p>
+                        </div>
+                    </div>
+                    <div class="header-actions">
+                        <button class="back-btn" onclick="window.location.href='home.html'">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M19 12H5M12 19l-7-7 7-7"/>
+                            </svg>
+                            Back
+                        </button>
+                        <button class="logout-button" id="logout-btn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
+                            </svg>
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <main class="main-content">
+                <div class="section-container">
+                    <div class="section-icon">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2">
+                            <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                        </svg>
+                    </div>
+                    <h2>Stock Section</h2>
+                    <p class="section-description">
+                        Monitor your current inventory levels and receive alerts for low stock items. Keep track of product availability to ensure smooth business operations.
+                    </p>
+                </div>
+            </main>
+        </section>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script src="js/section.js"></script>
+</body>
+</html>

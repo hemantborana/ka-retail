@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify OTP - KA Retail</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/common.css">
+    <link rel="stylesheet" href="styles/otp.css">
+</head>
+<body>
+     <script>
+        (function() {
+            const pendingEmail = sessionStorage.getItem('pendingEmail');
+            if (!pendingEmail) {
+                window.location.replace('index.html');
+                return;
+            }
+        })();
+    </script>
+    <div class="app-container">
+        <section id="otp-screen" class="screen active">
+            <div class="content-wrapper">
+                <button class="back-button" onclick="history.back()">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M19 12H5M12 19l-7-7 7-7"/>
+                    </svg>
+                </button>
+                
+                <div class="glass-card slide-up">
+                    <div class="logo-container">
+                        <svg viewBox="0 0 100 100" class="logo">
+                            <text x="10" y="60" font-size="48" font-family="Cinzel, serif" fill="#FFD700">KA</text>
+                        </svg>
+                    </div>
+                    <h1 class="title">Verify OTP</h1>
+                    <p class="subtitle">Enter the code sent to your email</p>
+                    
+                    <form id="otp-form" class="form-container">
+                        <div class="input-group">
+                            <label for="otp">Enter OTP</label>
+                            <input 
+                                type="text" 
+                                id="otp" 
+                                class="elegant-input otp-input" 
+                                placeholder="123456"
+                                maxlength="6"
+                                pattern="[0-9]{6}"
+                                required
+                            >
+                        </div>
+                        <button type="submit" class="gold-button">Verify</button>
+                        <button type="button" class="resend-button">Resend OTP</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script src="js/otp.js"></script>
+</body>
+</html>

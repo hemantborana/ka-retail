@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home - KA Retail</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/common.css">
+    <link rel="stylesheet" href="styles/home.css">
+</head>
+<body>
+        <script>
+
+    (function() {
+            try {
+                const stored = localStorage.getItem('kaRetailUser');
+                if (!stored) {
+                    window.location.replace('index.html');
+                    return;
+                }
+                
+                const userData = JSON.parse(stored);
+                const expiryDate = new Date(userData.sessionExpiry);
+                const now = new Date();
+                
+                if (now > expiryDate) {
+                    localStorage.removeItem('kaRetailUser');
+                    window.location.replace('index.html');
+                    return;
+                }
+            } catch(e) {
+                window.location.replace('index.html');
+                return;
+            }
+        })();
+            </script>
+
+    <div class="app-container">
+        <section id="home-screen" class="screen active">
+            <header class="luxury-header">
+                <div class="header-content">
+                    <div class="header-left">
+                        <svg viewBox="0 0 100 100" class="header-logo">
+                            <text x="10" y="60" font-size="48" font-family="Cinzel, serif" fill="#FFD700">KA</text>
+                        </svg>
+                        <div class="header-text">
+                            <h1>Welcome Retail Partner</h1>
+                            <p>Kambeshwar Agencies</p>
+                        </div>
+                    </div>
+                    <button class="logout-button" id="logout-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/>
+                        </svg>
+                        Logout
+                    </button>
+                </div>
+            </header>
+
+            <main class="main-content">
+                <div class="button-grid">
+                    <div class="glass-button-card" data-action="order">
+                        <div class="icon-container">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2">
+                                <path d="M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+                            </svg>
+                        </div>
+                        <h2>Order</h2>
+                        <p class="button-description">Effortlessly place new orders from your curated catalog. Enjoy seamless selection and confirmation.</p>
+                        <div class="button-overlay"></div>
+                    </div>
+
+                    <div class="glass-button-card" data-action="recent-order">
+                        <div class="icon-container">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2">
+                                <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <h2>Recent Order</h2>
+                        <p class="button-description">Review your latest transactions, track deliveries, and reorder with premium ease.</p>
+                        <div class="button-overlay"></div>
+                    </div>
+
+                    <div class="glass-button-card" data-action="stock">
+                        <div class="icon-container">
+                            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#FFD700" stroke-width="2">
+                                <path d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
+                            </svg>
+                        </div>
+                        <h2>Stock</h2>
+                        <p class="button-description">Monitor inventory levels, receive restock alerts, and maintain optimal availability.</p>
+                        <div class="button-overlay"></div>
+                    </div>
+                </div>
+            </main>
+        </section>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script src="js/home.js"></script>
+</body>
+</html>

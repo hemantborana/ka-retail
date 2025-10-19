@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KA Retail E-Ordering</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/common.css">
+    <link rel="stylesheet" href="styles/login.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Login Screen -->
+        <section id="login-screen" class="screen active">
+            <div class="background-gradient"></div>
+            <div class="content-wrapper">
+                <div class="glass-card fade-in">
+                    <div class="logo-container">
+                        <svg viewBox="0 0 100 100" class="logo">
+                            <text x="10" y="60" font-size="48" font-family="Cinzel, serif" fill="#FFD700">KA</text>
+                        </svg>
+                    </div>
+                    <h1 class="title">Welcome to Kambeshwar Agencies</h1>
+                    <p class="subtitle">Retail Partner Portal</p>
+                    
+                    <form id="login-form" class="form-container">
+                        <div class="input-group">
+                            <label for="email">Email Address</label>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                class="elegant-input" 
+                                placeholder="hemantpb123@gmail.com"
+                                required
+                            >
+                        </div>
+                        <button type="submit" class="gold-button">Send OTP</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script src="js/common.js"></script>
+    <script src="js/login.js"></script>
+</body>
+</html>

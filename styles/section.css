@@ -1,0 +1,208 @@
+/* ========================================
+   KA Retail E-Ordering - Section Pages Styles
+   ======================================== */
+
+/* Header Styles */
+.luxury-header {
+    background: linear-gradient(135deg, rgba(26, 26, 26, 0.95), rgba(15, 15, 15, 0.98));
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+    padding: 24px 32px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-logo {
+    width: 60px;
+    height: 60px;
+    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.4));
+}
+
+.header-text h1 {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--color-gold);
+    margin-bottom: 4px;
+}
+
+.header-text p {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.back-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: var(--font-body);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--color-gold);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover {
+    background: rgba(255, 215, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.logout-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: var(--font-body);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--color-gold);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.logout-button:hover {
+    background: rgba(255, 215, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Main Content */
+.main-content {
+    padding: 80px 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+    min-height: calc(100vh - 112px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.section-container {
+    text-align: center;
+    max-width: 600px;
+    animation: fadeIn 0.8s ease-out;
+}
+
+.section-icon {
+    margin: 0 auto 32px;
+    width: 120px;
+    height: 120px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: 24px;
+    border: 2px solid rgba(255, 215, 0, 0.3);
+    transition: all 0.4s ease;
+}
+
+.section-container:hover .section-icon {
+    transform: scale(1.05);
+    background: rgba(255, 215, 0, 0.15);
+    border-color: var(--color-gold);
+    box-shadow: 0 8px 30px rgba(255, 215, 0, 0.3);
+}
+
+.section-container h2 {
+    font-family: var(--font-heading);
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--color-gold);
+    margin-bottom: 24px;
+}
+
+.section-description {
+    font-size: 16px;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 400;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .luxury-header {
+        padding: 16px 20px;
+    }
+
+    .header-left {
+        gap: 12px;
+    }
+
+    .header-logo {
+        width: 50px;
+        height: 50px;
+    }
+
+    .header-text h1 {
+        font-size: 18px;
+    }
+
+    .header-text p {
+        font-size: 12px;
+    }
+
+    .header-actions {
+        gap: 8px;
+    }
+
+    .back-btn,
+    .logout-button {
+        padding: 10px 16px;
+        font-size: 12px;
+    }
+
+    .back-btn svg,
+    .logout-button svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .main-content {
+        padding: 48px 20px;
+    }
+
+    .section-icon {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 24px;
+    }
+
+    .section-icon svg {
+        width: 48px;
+        height: 48px;
+    }
+
+    .section-container h2 {
+        font-size: 28px;
+    }
+
+    .section-description {
+        font-size: 14px;
+    }
+}

@@ -1,0 +1,314 @@
+/* ========================================
+   KA Retail E-Ordering - Home Screen Styles
+   ======================================== */
+
+#home-screen {
+    background-color: #0B0B0B;
+}
+
+/* Header Styles */
+.luxury-header {
+    background: linear-gradient(135deg, rgba(26, 26, 26, 0.95), rgba(15, 15, 15, 0.98));
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+    padding: 24px 32px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.header-left {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.header-logo {
+    width: 60px;
+    height: 60px;
+    filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.4));
+}
+
+.header-text h1 {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--color-gold);
+    margin-bottom: 4px;
+}
+
+.header-text p {
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.logout-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 24px;
+    font-size: 14px;
+    font-weight: 500;
+    font-family: var(--font-body);
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--color-gold);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.logout-button:hover {
+    background: rgba(255, 215, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Main Content */
+.main-content {
+    padding: 48px 32px;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.button-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 32px;
+    animation: fadeIn 0.8s ease-out;
+}
+
+/* Glass Button Cards */
+.glass-button-card {
+    position: relative;
+    background: rgba(26, 26, 26, 0.7);
+    backdrop-filter: blur(15px);
+    border: 1px solid rgba(255, 215, 0, 0.2);
+    border-radius: 20px;
+    padding: 40px 32px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+    min-height: 280px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.glass-button-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.05), transparent);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.glass-button-card:hover::before {
+    opacity: 1;
+}
+
+.button-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at center, rgba(255, 215, 0, 0.15), transparent);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+    pointer-events: none;
+}
+
+.glass-button-card:hover .button-overlay {
+    opacity: 1;
+}
+
+.glass-button-card:hover {
+    transform: translateY(-8px);
+    border-color: var(--color-gold);
+    box-shadow: 0 12px 40px rgba(255, 215, 0, 0.3);
+}
+
+.icon-container {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 215, 0, 0.1);
+    border-radius: 16px;
+    margin-bottom: 24px;
+    transition: all 0.4s ease;
+}
+
+.glass-button-card:hover .icon-container {
+    transform: scale(1.1);
+    background: rgba(255, 215, 0, 0.2);
+}
+
+.glass-button-card h2 {
+    font-family: var(--font-heading);
+    font-size: 24px;
+    font-weight: 600;
+    color: var(--color-gold);
+    margin-bottom: 16px;
+}
+
+.button-description {
+    font-size: 14px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 400;
+}
+
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal.active {
+    display: flex;
+}
+
+.modal-content {
+    max-width: 500px;
+    width: 90%;
+    position: relative;
+    animation: slideUp 0.4s ease-out;
+}
+
+.modal-close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    background: transparent;
+    border: none;
+    color: var(--color-gold);
+    font-size: 32px;
+    cursor: pointer;
+    line-height: 1;
+    transition: transform 0.3s ease;
+}
+
+.modal-close:hover {
+    transform: rotate(90deg);
+}
+
+#modal-title {
+    font-family: var(--font-heading);
+    font-size: 28px;
+    color: var(--color-gold);
+    margin-bottom: 16px;
+}
+
+#modal-description {
+    font-size: 16px;
+    line-height: 1.6;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 32px;
+}
+
+#modal-close-btn {
+    margin-top: 8px;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .button-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
+    }
+}
+
+@media (max-width: 768px) {
+    .luxury-header {
+        padding: 16px 20px;
+    }
+
+    .header-left {
+        gap: 12px;
+    }
+
+    .header-logo {
+        width: 50px;
+        height: 50px;
+    }
+
+    .header-text h1 {
+        font-size: 18px;
+    }
+
+    .header-text p {
+        font-size: 12px;
+    }
+
+    .logout-button {
+        padding: 10px 16px;
+        font-size: 12px;
+    }
+
+    .logout-button svg {
+        width: 16px;
+        height: 16px;
+    }
+
+    .main-content {
+        padding: 24px 16px;
+    }
+
+    .button-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .glass-button-card {
+        padding: 32px 24px;
+        min-height: 240px;
+    }
+
+    .icon-container {
+        width: 70px;
+        height: 70px;
+    }
+
+    .glass-button-card h2 {
+        font-size: 20px;
+    }
+
+    .button-description {
+        font-size: 13px;
+    }
+
+    .modal-content {
+        padding: 32px 24px;
+    }
+
+    #modal-title {
+        font-size: 24px;
+    }
+
+    #modal-description {
+        font-size: 14px;
+    }
+}
