@@ -12,14 +12,34 @@ const API_CONFIG = {
 const AppState = {
     currentUser: null,
     isAuthenticated: false,
+    isInitialized: false,
+    validationPromise: null,
     
-    // Initialize state from localStorage
-    init() {
+    // Initialize state from localStorage and validate with server
+    async init() {
         const storedUser = this.getStoredUser();
         if (storedUser) {
-            // Check if session is still valid
-            this.validateSession(storedUser);
+            // Check if session is still valid (client-side first)
+            const expiryDate = new Date(storedUser.sessionExpiry);
+            const now = new Date();
+            
+            if (now <= expiryDate) {
+                // Session not expired, validate with server
+                const isValid = await this.validateSessionWithServer(storedUser);
+                if (isValid) {
+                    this.currentUser = storedUser;
+                    this.isAuthenticated = true;
+                    console.log('Session validated with server');
+                } else {
+                    console.log('Session rejected by server');
+                    this.clearUser();
+                }
+            } else {
+                console.log('Session expired (client-side check)');
+                this.clearUser();
+            }
         }
+        this.isInitialized = true;
     },
     
     // Store user data using localStorage (1 month validity)
@@ -37,6 +57,7 @@ const AppState = {
         // Use localStorage for persistent login (1 month)
         try {
             localStorage.setItem('kaRetailUser', JSON.stringify(this.currentUser));
+            console.log('User session saved to localStorage');
         } catch (e) {
             console.error('Failed to save user session:', e);
         }
@@ -53,44 +74,27 @@ const AppState = {
         }
     },
     
-    // Validate if stored session is still valid
-    async validateSession(userData) {
+    // Validate if stored session is still valid with server
+    async validateSessionWithServer(userData) {
         try {
-            // Check expiry date first (client-side check)
-            const expiryDate = new Date(userData.sessionExpiry);
-            const now = new Date();
-            
-            if (now > expiryDate) {
-                console.log('Session expired (client-side check)');
-                this.clearUser();
-                return false;
-            }
-            
-            // Verify with server
+            console.log('Validating session with server...');
             const response = await API.checkSession(userData.email, userData.sessionToken);
             
             if (response.success) {
-                this.currentUser = userData;
-                this.isAuthenticated = true;
+                // Check if user is still active in the system
+                if (response.data && response.data.isActive === false) {
+                    console.log('User account is inactive');
+                    return false;
+                }
                 return true;
             } else {
-                console.log('Session invalid (server check)');
-                this.clearUser();
+                console.log('Session invalid:', response.message);
                 return false;
             }
         } catch (error) {
             console.error('Session validation error:', error);
-            // On network error, allow client-side validation
-            const expiryDate = new Date(userData.sessionExpiry);
-            const now = new Date();
-            
-            if (now <= expiryDate) {
-                this.currentUser = userData;
-                this.isAuthenticated = true;
-                return true;
-            }
-            
-            this.clearUser();
+            // On network error, reject the session for security
+            // User will need to login again when network is available
             return false;
         }
     },
@@ -101,9 +105,22 @@ const AppState = {
         this.isAuthenticated = false;
         try {
             localStorage.removeItem('kaRetailUser');
+            console.log('User session cleared');
         } catch (e) {
             console.error('Failed to clear user session:', e);
         }
+    },
+    
+    // Check if user needs revalidation (call this periodically)
+    async revalidateSession() {
+        if (!this.currentUser) return false;
+        
+        const isValid = await this.validateSessionWithServer(this.currentUser);
+        if (!isValid) {
+            this.clearUser();
+            return false;
+        }
+        return true;
     }
 };
 
@@ -275,6 +292,35 @@ const Utils = {
         }, 3000);
     },
     
+    // Show alert message (for access denied, etc.)
+    showAlert(message, type = 'error') {
+        const bgColor = type === 'error' ? 'rgba(244, 67, 54, 0.95)' : 'rgba(255, 152, 0, 0.95)';
+        const alert = document.createElement('div');
+        alert.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: ${bgColor};
+            color: white;
+            padding: 24px 32px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 500;
+            z-index: 10001;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            text-align: center;
+            min-width: 300px;
+        `;
+        alert.textContent = message;
+        
+        document.body.appendChild(alert);
+        
+        setTimeout(() => {
+            alert.remove();
+        }, 3000);
+    },
+    
     // Format date/time
     formatDate(dateString) {
         const date = new Date(dateString);
@@ -288,9 +334,6 @@ const Utils = {
     }
 };
 
-// Initialize app state when script loads
-AppState.init();
-
 // Add CSS for toast animations
 const style = document.createElement('style');
 style.textContent = `
@@ -302,6 +345,16 @@ style.textContent = `
         to {
             opacity: 0;
             transform: translateY(-20px);
+        }
+    }
+    @keyframes slideUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
         }
     }
 `;

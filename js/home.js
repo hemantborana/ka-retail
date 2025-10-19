@@ -1,193 +1,141 @@
 /* ========================================
-   KA Retail E-Ordering - OTP Screen JavaScript
+   KA Retail E-Ordering - Home Screen JavaScript
    ======================================== */
 
 (function() {
     'use strict';
     
-    // DOM Elements
-    const otpForm = document.getElementById('otp-form');
-    const otpInput = document.getElementById('otp');
-    const submitButton = otpForm.querySelector('button[type="submit"]');
-    const resendButton = document.querySelector('.resend-button');
-    
-    // Get email from session
-    const pendingEmail = sessionStorage.getItem('pendingEmail');
-    
-    // Resend cooldown timer
-    let resendCooldown = 0;
-    let cooldownInterval = null;
-    let isSubmitting = false;
-    
-    // Check if user came from login screen
-    if (!pendingEmail) {
-        console.log('No pending email found, redirecting to login');
-        Navigation.goto('login');
-        return;
-    }
-    
-    // Form submission handler
-    otpForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        // Prevent multiple simultaneous submissions
-        if (isSubmitting) {
-            return;
-        }
-        
-        const otp = otpInput.value.trim();
-        
-        // Clear any existing errors
-        Utils.clearError(otpInput);
-        
-        // Validate OTP
-        if (!otp) {
-            Utils.showError(otpInput, 'OTP is required');
-            return;
-        }
-        
-        if (!Utils.validateOTP(otp)) {
-            Utils.showError(otpInput, 'OTP must be 6 digits');
-            return;
-        }
-        
-        // Set submitting flag
-        isSubmitting = true;
-        
-        // Show loading state
-        Utils.setButtonLoading(submitButton, true);
-        
+    // Validate authentication silently in background
+    async function validateAuth() {
         try {
-            // Call real API to verify OTP
-            const response = await API.verifyOTP(pendingEmail, otp);
+            // Initialize AppState (validates with server)
+            await AppState.init();
             
-            if (response.success) {
-                // Store user data with session token
-                AppState.setUser(response.data);
+            // Check authentication
+            if (!AppState.isAuthenticated || !AppState.currentUser) {
+                console.log('User not authenticated, redirecting to login...');
                 
-                // Clear pending email
-                sessionStorage.removeItem('pendingEmail');
+                // Check if there was a stored user (means access was denied)
+                const hadStoredUser = localStorage.getItem('kaRetailUser') !== null;
                 
-                // Show success message
-                Utils.showSuccess(response.message || 'Login successful!');
+                if (hadStoredUser) {
+                    // Access was denied by server
+                    Utils.showAlert('Access Denied: Your account has been deactivated or session is invalid. Please contact admin.', 'error');
+                } else {
+                    Utils.showAlert('Please login to continue.', 'error');
+                }
                 
-                // Navigate to home screen after short delay
                 setTimeout(() => {
-                    Navigation.goto('home');
-                }, 1000);
-            } else {
-                // Show error from server
-                Utils.showError(otpInput, response.message || 'Invalid OTP');
-                Utils.setButtonLoading(submitButton, false);
-                otpInput.value = '';
-                otpInput.focus();
-                isSubmitting = false;
+                    Navigation.goto('login');
+                }, 2500);
+                return false;
             }
             
+            return true;
         } catch (error) {
-            console.error('OTP verification error:', error);
-            Utils.showError(otpInput, error.message || 'Failed to verify OTP. Please try again.');
-            Utils.setButtonLoading(submitButton, false);
-            otpInput.value = '';
-            otpInput.focus();
-            isSubmitting = false;
-        }
-    });
-    
-    // Resend OTP handler
-    resendButton.addEventListener('click', async (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        
-        if (resendCooldown > 0) {
-            return;
-        }
-        
-        Utils.setButtonLoading(resendButton, true);
-        
-        try {
-            // Call real API to resend OTP
-            const response = await API.generateOTP(pendingEmail);
-            
-            if (response.success) {
-                Utils.showSuccess(response.message || 'OTP resent successfully!');
-                startResendCooldown();
-            } else {
-                alert(response.message || 'Failed to resend OTP. Please try again.');
-            }
-            
-        } catch (error) {
-            console.error('Resend OTP error:', error);
-            alert('Failed to resend OTP. Please try again.');
-        } finally {
-            Utils.setButtonLoading(resendButton, false);
-        }
-    });
-    
-    // Real-time OTP validation
-    otpInput.addEventListener('input', (e) => {
-        // Only allow digits
-        e.target.value = e.target.value.replace(/\D/g, '');
-        
-        if (e.target.value.length > 0) {
-            Utils.clearError(otpInput);
-        }
-        
-        // Auto-submit when 6 digits entered
-        if (e.target.value.length === 6 && !isSubmitting) {
+            console.error('Auth validation error:', error);
+            Utils.showAlert('Network error. Please check your connection and try again.', 'error');
             setTimeout(() => {
-                const submitEvent = new SubmitEvent('submit', {
-                    bubbles: true,
-                    cancelable: true,
-                    submitter: submitButton
-                });
-                otpForm.dispatchEvent(submitEvent);
-            }, 100);
+                Navigation.goto('login');
+            }, 2500);
+            return false;
         }
-    });
-    
-    // Prevent form from submitting via Enter key during input
-    otpInput.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            if (otpInput.value.length === 6 && !isSubmitting) {
-                otpForm.dispatchEvent(new SubmitEvent('submit', {
-                    bubbles: true,
-                    cancelable: true,
-                    submitter: submitButton
-                }));
-            }
-        }
-    });
-    
-    // Start resend cooldown timer
-    function startResendCooldown() {
-        resendCooldown = 60; // 60 seconds cooldown
-        resendButton.disabled = true;
-        
-        cooldownInterval = setInterval(() => {
-            resendCooldown--;
-            resendButton.textContent = `Resend OTP (${resendCooldown}s)`;
-            
-            if (resendCooldown <= 0) {
-                clearInterval(cooldownInterval);
-                resendButton.disabled = false;
-                resendButton.textContent = 'Resend OTP';
-            }
-        }, 1000);
     }
     
-    // Auto-focus OTP input on load
-    window.addEventListener('load', () => {
-        otpInput.focus();
-    });
-    
-    // Cleanup on page unload
-    window.addEventListener('beforeunload', () => {
-        if (cooldownInterval) {
-            clearInterval(cooldownInterval);
+    // Initialize the page
+    async function init() {
+        const isValid = await validateAuth();
+        if (!isValid) return;
+        
+        // DOM Elements
+        const logoutBtn = document.getElementById('logout-btn');
+        const buttonCards = document.querySelectorAll('.glass-button-card');
+        
+        // Logout handler
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', () => {
+                const confirmed = confirm('Are you sure you want to logout?');
+                
+                if (confirmed) {
+                    // Clear user session
+                    AppState.clearUser();
+                    
+                    // Show logout message
+                    Utils.showSuccess('Logged out successfully!');
+                    
+                    // Navigate to login after short delay
+                    setTimeout(() => {
+                        Navigation.goto('login');
+                    }, 1000);
+                }
+            });
         }
-    });
+        
+        // Button card click handlers
+        buttonCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const action = card.dataset.action;
+                
+                switch(action) {
+                    case 'order':
+                        window.location.href = 'order.html';
+                        break;
+                    case 'recent-order':
+                        window.location.href = 'recent-order.html';
+                        break;
+                    case 'stock':
+                        window.location.href = 'stock.html';
+                        break;
+                    default:
+                        console.error('Unknown action:', action);
+                }
+            });
+            
+            // Add hover effect
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-8px)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+        
+        // Display user info in header
+        if (AppState.currentUser && AppState.currentUser.businessName) {
+            const headerSubtitle = document.querySelector('.header-text p');
+            if (headerSubtitle) {
+                headerSubtitle.textContent = `${AppState.currentUser.businessName} - ${AppState.currentUser.city || 'India'}`;
+            }
+        }
+        
+        // Prevent back navigation to login when logged in
+        window.addEventListener('popstate', (e) => {
+            if (AppState.isAuthenticated) {
+                history.pushState(null, '', window.location.href);
+            }
+        });
+        
+        // Initial state push
+        history.pushState(null, '', window.location.href);
+        
+        // Periodic session validation (every 5 minutes) - SILENT
+        setInterval(async () => {
+            const isValid = await AppState.revalidateSession();
+            if (!isValid) {
+                Utils.showAlert('Access Denied: Your session has expired or access has been revoked by admin.', 'error');
+                setTimeout(() => {
+                    Navigation.goto('login');
+                }, 2500);
+            }
+        }, 5 * 60 * 1000); // 5 minutes
+    }
+    
+    // Start initialization when page loads
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
     
 })();

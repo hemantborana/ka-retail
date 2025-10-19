@@ -5,12 +5,15 @@
 (function() {
     'use strict';
     
-    // Check if already logged in
-    if (AppState.isAuthenticated && AppState.currentUser) {
-        console.log('User already logged in, redirecting to home...');
-        Navigation.goto('home');
-        return;
-    }
+    // Wait for AppState to be fully initialized
+    setTimeout(() => {
+        // Check if already logged in
+        if (AppState.isAuthenticated && AppState.currentUser) {
+            console.log('User already logged in, redirecting to home...');
+            Navigation.goto('home');
+            return;
+        }
+    }, 100);
     
     // DOM Elements
     const loginForm = document.getElementById('login-form');
